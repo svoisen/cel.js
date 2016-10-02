@@ -1,0 +1,25 @@
+{
+  "name": "acetate",
+  "version": "0.0.1",
+  "description": "",
+  "main": "acetate.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sean Voisen",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^3.6.0",
+    "gulp": "^3.9.1",
+    "gulp-mocha": "^3.0.1",
+    "gulp-util": "^3.0.7",
+    "mocha": "^3.0.2"
+  },
+  "dependencies": {
+    "curry": "^1.2.0"
+  }
+}
