@@ -143,15 +143,23 @@ describe('streams', function () {
     });
 
     describe('when combining streams (#combine)', () => {
-        it('should be able to combine streams', function () {
+        it('should be able to combine streams without existing values', function () {
             var s1 = stream(),
                 s2 = stream(),
                 combined = stream.combine(s1, s2, (val1, val2) => {
                     return val1 + val2;
                 });
 
+            assert.isTrue(stream.isEmpty(combined));
+
             s1(1);
             s2(2);
+            assert.isFalse(stream.isEmpty(combined));
+            assert.equal(combined(), 3);
+        });
+
+        it('should be able to combine streams with existing values', function () {
+            var combined = stream.combine(stream(1), stream(2), (v1, v2) => v1 + v2);
             assert.equal(combined(), 3);
         });
     });
