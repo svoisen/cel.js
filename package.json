@@ -20,6 +20,7 @@
     "mocha": "^3.0.2"
   },
   "dependencies": {
-    "curry": "^1.2.0"
+    "curry": "^1.2.0",
+    "ramda": "^0.22.1"
   }
 }

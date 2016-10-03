@@ -55,6 +55,12 @@ describe('streams', function () {
     });
 
     describe('when observing a stream (#observe)', () => {
+        it('should not call the observer for an empty stream', function () {
+            var called = false;
+            stream.observe(stream(), _ => called = true);
+            assert.isFalse(called);
+        });
+
         it('should call the observer callback', () => {
             var s = stream(),
                 values = [];
@@ -86,11 +92,15 @@ describe('streams', function () {
     });
     
     describe('when mapping streams (#map)', function () {
+        it('should not apply mapping function on empty stream', function () {
+            var called = false;
+            stream.map(stream(), _ => called = true);
+            assert.isFalse(called);
+        });
+
         it('should apply the mapping function', () => {
             var s = stream();
-            var mapped = stream.map(s, (val) => {
-                return val * val;
-            });
+            var mapped = stream.map(s, val => val * val);
 
             s(1);
             assert.equal(mapped(), 1);
@@ -134,12 +144,14 @@ describe('streams', function () {
 
     describe('when combining streams (#combine)', () => {
         it('should be able to combine streams', function () {
-            var s1 = stream(1),
-                s2 = stream(2),
+            var s1 = stream(),
+                s2 = stream(),
                 combined = stream.combine(s1, s2, (val1, val2) => {
                     return val1 + val2;
                 });
 
+            s1(1);
+            s2(2);
             assert.equal(combined(), 3);
         });
     });
