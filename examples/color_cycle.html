@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Color Cycle</title>
+    <script src="../dist/cel.js"></script>
+</head>
+<body>
+    <div id="sketch"></div>
+    <script type="text/javascript">
+        var container = document.getElementById('sketch'),
+            sketch = setup(container),
+            colors = stream.sample(stream.fromArray(['red', 'green', 'blue']),
+                stream.fromInterval(1000));
+
+        sketch(clear(colors));
+    </script>
+</body>
+</html>

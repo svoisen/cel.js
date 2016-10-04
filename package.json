@@ -1,26 +1,28 @@
 {
-  "name": "acetate",
+  "name": "cel.js",
   "version": "0.0.1",
   "description": "",
-  "main": "acetate.js",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "main": "dist/cel.js",
   "author": "Sean Voisen",
   "license": "MIT",
   "devDependencies": {
+    "browserify": "^13.1.0",
     "chai": "^3.5.0",
     "eslint": "^3.6.0",
     "gulp": "^3.9.1",
     "gulp-mocha": "^3.0.1",
+    "gulp-rename": "^1.2.2",
     "gulp-util": "^3.0.7",
-    "mocha": "^3.0.2"
+    "jsdom": "^9.7.1",
+    "jsdom-global": "^2.1.0",
+    "mocha": "^3.0.2",
+    "mocha-jsdom": "^1.1.0",
+    "raf-stub": "^1.0.0",
+    "sinon": "^1.17.6",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
-    "curry": "^1.2.0",
     "ramda": "^0.22.1"
   }
 }
