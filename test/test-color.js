@@ -1,5 +1,6 @@
 const assert = require('chai').assert;
 const color = require('../lib/color');
+const stream = require('../lib/stream');
 
 describe('color', function () {
     describe('rgba', function () {

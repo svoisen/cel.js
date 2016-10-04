@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Color Cycle</title>
+    <script src="../dist/cel.js"></script>
+</head>
+<body>
+    <div id="sketch"></div>
+    <script type="text/javascript">
+        var container = document.getElementById('sketch'),
+            sketch = setup(container),
+            interval = stream.fromInterval(1000),
+            colors = stream.sample(stream.fromArray(['red', 'green', 'blue']), interval);
+
+        sketch(backgroundColor(colors));
+
+//        var pos = geom.point(0, 0),
+//            size = geom.size(100, 100),
+//            color = color.rgba(1, 0, 0, 0);
+
+//        sketch(shape.rect(pos, size, color));
+    </script>
+</body>
+</html>
