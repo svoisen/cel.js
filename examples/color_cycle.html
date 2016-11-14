@@ -10,7 +10,9 @@
     <script type="text/javascript">
         var container = document.getElementById('sketch'),
             sketch = setup(container),
-            colors = observable.fromArray(['red', 'green', 'blue']).sample(1000);
+            colors = observable.fromArray(['red', 'green', 'blue'])
+                               .sample(1000)
+                               .map(obj => obj.value);
 
         sketch(clear(colors));
     </script>

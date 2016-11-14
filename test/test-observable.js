@@ -28,13 +28,23 @@ describe('observable', function () {
             assert.equal(typeof stream(), 'undefined');
         });
 
-        it('should NOT be able to have an initial value', function () {
+        it('should be able to have an initial value', function () {
             var stream = observable.stream(1);
+            assert.equal(stream(), 1);
             assert.equal(typeof stream(), 'undefined');
         });
 
-        it('should NOT be able to have a current value', function () {
+        it('should be able to have a temporary current value', function () {
             stream(1);
+            assert.equal(stream(), 1);
+            assert.equal(typeof stream(), 'undefined');
+        });
+
+        it('should queue values when there are no observers', function () {
+            stream(1)(2)(3);
+            assert.equal(stream(), 1);
+            assert.equal(stream(), 2);
+            assert.equal(stream(), 3);
             assert.equal(typeof stream(), 'undefined');
         });
     });
@@ -190,6 +200,13 @@ describe('observable', function () {
                 stream(2);
                 assert.isTrue(spy.calledWith(4));
             });
+
+            it('should preserve queueing from upstream', function () {
+                var stream = observable.fromArray([1, 2, 3]).map(val => val * val);
+
+                assert.equal(stream(), 1);
+                assert.equal(stream(), 4);
+            });
         });
 
         describe('when mapping properties', function () {
@@ -279,6 +296,10 @@ describe('observable', function () {
     });
 
     describe('#fromInterval', function () {
+        it('should not start until there is at least one observer', function () {
+            var stream = observable.fromInterval(50);
+        });
+
         it('should push the interval id on the stream', function (done) {
             var stream = observable.fromInterval(50);
             
@@ -382,8 +403,23 @@ describe('observable', function () {
     });
 
     describe('#sample', function () {
-        it('should return a stream', function () {
+        it('should return a property', function () {
+            var property = observable.property(),
+                sampled = observable.sample(property, 50);
 
+            assert.isTrue(observable.isProperty(sampled));
+        });
+
+        it('should be lazy', function (done) {
+            var property = observable.fromArray([1, 2, 3]),
+                sampled = observable.sample(property, 10);
+
+            setTimeout(function () {
+                assert.equal(sampled().value, 1);
+                assert.equal(sampled().value, 2);
+                assert.equal(sampled().value, 3);
+                done();
+            }, 50);
         });
 
         it('should be a curried function', function () {
