@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Color Cycle</title>
+    <title>Pulsing Circle</title>
     <script src="../dist/cel.js"></script>
 </head>
 <body>
@@ -10,10 +10,9 @@
     <script type="text/javascript">
         var container = document.getElementById('sketch'),
             sketch = setup(container),
-            colors = observable.fromArray(['red', 'green', 'blue'])
-                               .sample(1000);
-
-        sketch(clear(colors));
+            pulsing = ellipse(container.clientWidth/2, container.clientHeight/2, 100, 100, 'red');
+            
+        sketch(pulsing);
     </script>
 </body>
 </html>

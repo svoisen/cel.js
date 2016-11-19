@@ -10,7 +10,7 @@ const rename = require('gulp-rename');
 
 var config = {
     js: {
-        entry: './lib/main.js',
+        entry: './lib/expose.js',
         outputDir: './dist/',
         outputFile: 'cel.js'
     }
