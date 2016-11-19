@@ -28,23 +28,8 @@ describe('observable', function () {
             assert.equal(typeof stream(), 'undefined');
         });
 
-        it('should be able to have an initial value', function () {
+        it('should not be able to have an initial value', function () {
             var stream = observable.stream(1);
-            assert.equal(stream(), 1);
-            assert.equal(typeof stream(), 'undefined');
-        });
-
-        it('should be able to have a temporary current value', function () {
-            stream(1);
-            assert.equal(stream(), 1);
-            assert.equal(typeof stream(), 'undefined');
-        });
-
-        it('should queue values when there are no observers', function () {
-            stream(1)(2)(3);
-            assert.equal(stream(), 1);
-            assert.equal(stream(), 2);
-            assert.equal(stream(), 3);
             assert.equal(typeof stream(), 'undefined');
         });
     });
@@ -296,8 +281,17 @@ describe('observable', function () {
     });
 
     describe('#fromInterval', function () {
-        it('should not start until there is at least one observer', function () {
+        it('should not start until there is at least one observer', function (done) {
             var stream = observable.fromInterval(50);
+            assert.isTrue(util.isUndefined(stream._intervalId));
+            assert.isFalse(util.isFunction(stream.clearInterval));
+
+            stream.observe((id) => {
+                assert.isFalse(util.isUndefined(stream._intervalId));
+                assert.isTrue(util.isFunction(stream.clearInterval));
+                stream.clearInterval();
+                done();
+            });
         });
 
         it('should push the interval id on the stream', function (done) {
@@ -400,6 +394,18 @@ describe('observable', function () {
             p2(2);
             assert.sameMembers(vals, [3]);
         });
+
+        it('should not queue items even if a tributary queues items', function () {
+            var s1 = observable.fromArray([1, 2, 3]),
+                s2 = observable.stream(),
+                combined = observable.combine(s1, s2, (val1, val2) => val1 + val2),
+                vals = [];
+
+            s2(1)(2);
+            combined.observe(val => vals.push(val));
+            s2(3);
+            assert.sameMembers(vals, [6]);
+        });
     });
 
     describe('#sample', function () {
@@ -410,29 +416,27 @@ describe('observable', function () {
             assert.isTrue(observable.isProperty(sampled));
         });
 
-        it('should be lazy', function (done) {
+        it('should not sample until it has an observer', function (done) {
             var property = observable.fromArray([1, 2, 3]),
                 sampled = observable.sample(property, 10);
 
             setTimeout(function () {
-                assert.equal(sampled().value, 1);
-                assert.equal(sampled().value, 2);
-                assert.equal(sampled().value, 3);
+                assert.isTrue(util.isUndefined(sampled()));
+                assert.equal(property(), 1);
+                assert.equal(property(), 2);
+                assert.equal(property(), 3);
                 done();
             }, 50);
         });
-
-        it('should be a curried function', function () {
-
-        });
         
         it('should sample the property at regular intervals', function (done) {
-            var property = observable.property(),
+            var property = observable.property(1),
                 sampled = observable.sample(property, 50),
                 timestamp = Date.now();
 
             sampled.observe(val => {
-                clearInterval(val.intervalId);
+                assert.isTrue(util.isFunction(sampled.clearInterval));
+                sampled.clearInterval();
                 var delay = Date.now() - timestamp;
                 if (delay >= 45 && delay <= 55) {
                     done();
@@ -445,7 +449,19 @@ describe('observable', function () {
 
     describe('#sampleBy', function () {
         it('should sample the property on trigger events', function () {
+            var p = observable.property(1),
+                s = observable.stream(),
+                sampled = observable.sampleBy(p, s),
+                vals = [];
 
+            sampled.observe(val => vals.push(val));
+            assert.equal(vals.length, 0);
+            
+            s('foo');
+            s('foo');
+            
+            assert.equal(vals.length, 2);
+            assert.sameMembers(vals, [1, 1]);
         });
     });
 
