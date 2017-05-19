@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bounce</title>
+    <script src="../dist/cel.js"></script>
+</head>
+<body>
+    <div id="sketch" style="width: 800px; height: 800px"></div>
+    <script type="text/javascript">
+        var container = document.getElementById('sketch'),
+            sketch = setup(container),
+            t = sketch.ticker;
+        var x = t.scan({pos: container.clientWidth / 2, vel: 10}, (x) => {
+            if (x.pos + x.vel > 800 || x.pos + x.vel < 0) {
+                return {pos: x.pos, vel: -x.vel};
+            }
+
+            return {pos: x.pos + x.vel, vel: x.vel};
+        });
+        xReverse.observe(() => {
+            console.log('Reverse!');
+        });
+    </script>
+</body>
+</html>

@@ -216,6 +216,22 @@ describe('observable', function () {
 
     });
 
+    describe('#filter', function () {
+        it('should filter values that do not pass the filter function', function () {
+            var stream = observable.stream(),
+                evens = observable.filter(stream, (val) => {
+                    return val % 2 === 0;
+                }),
+                vals = [];
+            evens.observe((val) => {
+                vals.push(val);
+            });
+
+            stream(1)(2)(3)(4);
+            assert.sameMembers(vals, [2, 4]);
+        });
+    });
+
     describe('#isEmpty', function () {
         it('should be empty for streams', function () {
             var stream = observable.stream();
@@ -463,6 +479,16 @@ describe('observable', function () {
             assert.equal(vals.length, 2);
             assert.sameMembers(vals, [1, 1]);
         });
+    });
+
+    describe('#scan', function () {
+        it('should apply the scan on each item in the stream', function () {
+            var s = observable.stream(),
+                scanned = observable.scan(s, 0, (val1, val2) => val1 + val2);
+
+            s(1)(2)(3);
+            assert.equal(6, scanned());
+        })
     });
 
     describe('#toProperty', function () {

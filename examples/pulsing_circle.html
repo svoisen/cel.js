@@ -10,9 +10,13 @@
     <script type="text/javascript">
         var container = document.getElementById('sketch'),
             sketch = setup(container),
-            pulsing = ellipse(container.clientWidth/2, container.clientHeight/2, 100, 100, 'red');
+            x = container.clientWidth / 2,
+            y = container.clientHeight / 2,
+            ticker = sketch.ticker.scan(0, (x) => x + 1);
+            radius = ticker.map((x) => Math.abs(50 * Math.sin(x / 100))),
+            draw = clearBefore(ellipse(x, y, radius, radius, 'red'), 'white'),
             
-        sketch(pulsing);
+        sketch(draw);
     </script>
 </body>
 </html>
